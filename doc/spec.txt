@@ -1,0 +1,100 @@
+Un mic proiect (Spring Boot/Quarkus pus pe git) in care sa se rezolve reactive problema urmatoare:
+
+Sa se determine media temperaturii si a vitezei vantului din forecast DOAR pentru urmataorele orase: Cluj-Napoca, Bucuresti, Timisoara, Constanta, Baia-Mare, Arad.
+Rezultatul va fi returnat intr-un JSON si va fi salvat si intr-un fisier csv.
+
+Inputul pentru proiect poate contine un numar mai mare de orase decat cele vizate mai sus ca in exmeplul urmator:
+API GET - /api/weather?city=Cluj-Napoca,Bucuresti,Craiova,Timisoara,Dej,Constanta,Cluj-Napoca,Baia-Mare,Arad,Bistrita,Oradea 
+
+In urma call-ul vor rezultat doua raspunsuri:
+
+REST: cu orasele ordonate alfabetic si media temperaturii si a vantului
+Exemplu raspuns:
+{
+    "result": [
+        {
+            "name": "Arad",
+            "temperature": "needs_to_be_determined",
+            "wind": "needs_to_be_determined"
+        },
+        {
+            "name": "Baia-Mare",
+            "temperature": "needs_to_be_determined",
+            "wind": "needs_to_be_determined"
+        },
+        {
+            "name": "Bucuresti",
+            "temperature": "",
+            "wind": ""
+        },
+        {
+            "name": "Cluj-Napoca",
+            "temperature": "needs_to_be_determined",
+            "wind": "needs_to_be_determined"
+        },
+        {
+            "name": "Constanta",
+            "temperature": "needs_to_be_determined",
+            "wind": "needs_to_be_determined"
+        },
+        {
+            "name": "Timisoara",
+            "temperature": "needs_to_be_determined",
+            "wind": "needs_to_be_determined"
+        }
+    ]
+}
+
+CSV: cu orasele ordonate alfabetic si media temperaturii si a vantului (fisierul o sa fie suprascris cu fiecare apel al API-ului)
+Exemplu raspuns:
+Name, temperature, wind
+Arad,needs_to_be_determined
+Baia-Mare,needs_to_be_determined,needs_to_be_determined
+Bucuresti,,
+Cluj-Napoca,needs_to_be_determined,needs_to_be_determined
+Constanta,needs_to_be_determined,needs_to_be_determined
+Timisoara,needs_to_be_determined,needs_to_be_determined
+
+Se va folosi API-ul urmatorul API pentru determinarea temperaturii si vitezei vantului. 
+API : https://998d8129-2264-4a98-a92e-ba8bde4a4d1c.mock.pstmn.io/{city_name}
+SUCCESS Response (200 status code):
+
+{
+    "temperature": "",
+    "wind": "",
+    "description": "",
+    "forecast": [
+        {
+            "day": "1",
+            "temperature": "",
+            "wind": ""
+        },
+        {
+            "day": "2",
+            "temperature": "",
+            "wind": ""
+        },
+        {
+            "day": "3",
+            "temperature": "",
+            "wind": ""
+        },
+        {
+            "day": "4",
+            "temperature": "",
+            "wind": ""
+        },
+        {
+            "day": "5",
+            "temperature": "",
+            "wind": ""
+        },
+        {
+            "day": "6",
+            "temperature": "",
+            "wind": ""
+        }
+    ]
+}
+
+Daca nu exista data pentru orasul cautat serverul va returna 404 si valorile pentru media temperaturii si a vantului vor ramane empty
