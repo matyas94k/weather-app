@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.function.Function;
 
@@ -20,9 +21,11 @@ public class ForecastService {
     private List<String> selectedCities;
 
     private final RestTemplate restTemplate;
+    private final CsvService csvService;
 
-    public ForecastService(RestTemplate restTemplate) {
+    public ForecastService(RestTemplate restTemplate, CsvService csvService) {
         this.restTemplate = restTemplate;
+        this.csvService = csvService;
     }
 
     public WeatherResponse getForecastAverage(List<String> cityList) {
@@ -40,6 +43,12 @@ public class ForecastService {
                 return new ForecastResult(city, "", "");
             }
         };
-        return new WeatherResponse(cityList.stream().distinct().filter(selectedCities::contains).sorted().map(getForecast).toList());
+        final WeatherResponse weatherResponse = new WeatherResponse(cityList.stream().distinct().filter(selectedCities::contains).sorted().map(getForecast).toList());
+        try {
+            csvService.saveToFile(weatherResponse);
+        } catch (IOException e) {
+            System.err.println("Failed to write CSV file");
+        }
+        return weatherResponse;
     }
 }
